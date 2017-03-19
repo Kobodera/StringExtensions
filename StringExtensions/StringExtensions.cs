@@ -9,12 +9,12 @@ namespace StringExtensions
     public static class StringExtensions
     {
         /// <summary>
-        /// Converts a string to an Int32 value. If a default value have been set no exception will be thrown
+        /// Converts a string to an integer value. If a default value have been set no exception will be thrown
         /// in case the conversion fails.
         /// </summary>
         /// <param name="value">The string value that is to be parsed</param>
         /// <param name="defaultValue">An optional default value in case the conversion fails</param>
-        /// <returns>The Int32 representation of the string</returns>
+        /// <returns>The nullable integer representation of the string</returns>
         public static int ToInt(this string value, int? defaultValue = null)
         {
             int result;
@@ -43,6 +43,13 @@ namespace StringExtensions
         }
 
         
+        /// <summary>
+        /// Converts a string to an integer value. Empty strings are returned as null. Uses the ToInt extension
+        /// to return the int value if the string is not empty.
+        /// </summary>
+        /// <param name="value">The string value that is to be parsed</param>
+        /// <param name="defaultValue">An optional default value in case the conversion fails</param>
+        /// <returns>The integer representation of the string</returns>
         public static int? ToNullableInt(this string value, int? defaultValue = null)
         {
             string temp = value
@@ -69,6 +76,7 @@ namespace StringExtensions
 
             return temp.ToInt(defaultValue);
         }
+        
         
         /// <summary>
         /// Converts a string to a double value. If a default value have been set no exception will be thrown
@@ -106,6 +114,14 @@ namespace StringExtensions
             throw new ArgumentException($"The value '{value}' can not be parsed to a double.");
         }
 
+        
+        /// <summary>
+        /// Converts a string to a double value. Empty strings are returned as null. Uses the ToDouble extension
+        /// to return the double value if the string is not empty.
+        /// </summary>
+        /// <param name="value">The string value that is to be parsed</param>
+        /// <param name="defaultValue">An optional default value in casae the conversion fails</param>
+        /// <returns>The nullable double representation of the string</returns>
         public static double? ToNullableDouble(this string value, double? defaultValue = null)
         {
             string temp = value
@@ -152,6 +168,7 @@ namespace StringExtensions
             return temp.Trim();
         }
 
+       
         /// <summary>
         /// Replaces a part of the string with another value. The user can choose if the replace should be case insensitive
         /// </summary>
