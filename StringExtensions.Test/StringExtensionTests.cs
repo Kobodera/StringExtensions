@@ -475,5 +475,40 @@ namespace StringExtensions.Test
         }
 
         #endregion Replace
+
+        #region HashPassword
+
+        [TestMethod]
+        public void HashAndVerifyPassword()
+        {
+            string hashedPassword = "password".HashPassword();
+            Assert.AreEqual(true, hashedPassword.VerifyPasswordHash("password"));
+        }
+
+        [TestMethod]
+        public void HashAndVerifyPassword_WrongPassword()
+        {
+            string hashedPassword = "password".HashPassword();
+            Assert.AreEqual(false, hashedPassword.VerifyPasswordHash("password2"));
+        }
+
+        [TestMethod]
+        public void HashAndVerifyPassword_WrongItterations()
+        {
+            string hashedPassword = "password".HashPassword();
+            Assert.AreEqual(false, hashedPassword.VerifyPasswordHash("password", 9999));
+        }
+
+        [TestMethod]
+        public void HashPasswordTwice_NotSameHash()
+        {
+            string hashedPassword1 = "password".HashPassword();
+            string hashedPassword2 = "password".HashPassword();
+
+            Assert.AreNotEqual(hashedPassword1, hashedPassword2);
+        }
+
+        #endregion HashPassword
+
     }
 }

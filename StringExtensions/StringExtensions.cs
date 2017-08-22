@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -206,6 +207,55 @@ namespace StringExtensions
             sb.Append(value.Substring(lastIndex));
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Uses RNGCryptoProvider to create a secure password hash
+        /// </summary>
+        /// <param name="password">The string that is the password to be hashed</param>
+        /// <param name="iterations">The number of iterations that Rfc2898DerrivedBytes will go through to get to the hash</param>
+        /// <returns>The password hash in Base64 string format</returns>
+        public static string HashPassword(this string password, int iterations = 10000)
+        {
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+
+            var rfcDerrivedBytes = new Rfc2898DeriveBytes(password, salt, iterations);
+            byte[] hash = rfcDerrivedBytes.GetBytes(20);
+
+            byte[] hashBytes = new byte[36];
+            Array.Copy(salt, 0, hashBytes, 0, 16);
+            Array.Copy(hash, 0, hashBytes, 16, 20);
+
+            return Convert.ToBase64String(hashBytes);
+        }
+
+        /// <summary>
+        /// Verifies a password hash created by the HashPassword extension method.
+        /// </summary>
+        /// <param name="passwordHash">The string that is the password hash to be verified</param>
+        /// <param name="password">The password that the hash is verified against</param>
+        /// <param name="iterations">The number of iterations Rfc2898DerrivedBytes will go throug to get to the hash</param>
+        /// <returns>A boolean if the password could be verified or not</returns>
+        public static bool VerifyPasswordHash(this string passwordHash, string password, int iterations = 10000)
+        {
+            byte[] hashBytes = Convert.FromBase64String(passwordHash);
+            byte[] salt = new byte[16];
+
+            Array.Copy(hashBytes, 0, salt, 0, 16);
+
+            var rfcDerrivedBytes = new Rfc2898DeriveBytes(password, salt, iterations);
+            byte[] hash = rfcDerrivedBytes.GetBytes(20);
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (hash[i] != hashBytes[i + 16])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
