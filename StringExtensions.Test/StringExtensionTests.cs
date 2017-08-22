@@ -7,6 +7,22 @@ namespace StringExtensions.Test
     [TestClass]
     public class StringExtensionTests
     {
+        #region IsInt
+
+        [TestMethod]
+        public void IsInt_True()
+        {
+            Assert.AreEqual(true, "1".IsInt());
+        }
+
+        [TestMethod]
+        public void IsInt_False()
+        {
+            Assert.AreEqual(false, "1.1".IsInt());
+        }
+
+        #endregion IsInt
+
         #region ToInt
 
         [TestMethod]

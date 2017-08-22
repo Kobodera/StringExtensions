@@ -10,6 +10,26 @@ namespace StringExtensions
     public static class StringExtensions
     {
         /// <summary>
+        /// Checks if the string is an int or not.
+        /// </summary>
+        /// <param name="value">The string value that is to be checked</param>
+        /// <returns>If the string is an int or not.</returns>
+        public static bool IsInt(this string value)
+        {
+            string temp = value
+                .ToLower()
+                .Cleanup(
+                    " ",        //Regular space 
+                    "\u00A0",   //Non breaking space
+                    "&nbsp;",   //HTML non breaking space
+                    "+"         //Plus signs
+                )
+                .Trim();
+
+            return int.TryParse(temp, out int outValue);
+        }
+
+        /// <summary>
         /// Converts a string to an integer value. If a default value have been set no exception will be thrown
         /// in case the conversion fails.
         /// </summary>
